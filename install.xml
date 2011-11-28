@@ -4,7 +4,6 @@
 	<author>Rick Companje</author>
 	<url></url>
 	
-	<requires>ofxVectorMath</requires>
 	<requires>ofxExtras</requires>
 	
 	<add>	
