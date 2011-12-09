@@ -14,7 +14,7 @@ public:
     ofxIniSettings() {}
     ofxIniSettings(string filename) { load(filename); }
 
-    bool load(string filename, bool clearFirst=false, bool setAsOutputFile=false); // you can call multiple times with different files, incremental
+    bool load(string filename, bool clearFirst=false, bool setAsOutputFile=true); // you can call multiple times with different files, incremental
     bool has(string key) { return keys[key]!=""; };
     void clear();
 
