@@ -2,7 +2,8 @@
 
 #include "ofxExtras.h" //hier ipv in header scheelt compileer tijd wanneer ofxExtras veranderd
 
-bool ofxIniSettings::load(string filename, bool clearFirst) {
+bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile) {
+    if (setAsOutputFile) outputFilename = filename;
     filename = ofToDataPath(filename);
     if (filename=="") { ofLog(OF_LOG_ERROR, "ofxIniSettings::no filename"); return false; }
     if (!ofxFileExists(filename)) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
@@ -45,7 +46,7 @@ ofVec3f  ofxIniSettings::get(string key, ofVec3f defaultValue) { return has(key)
 ofVec4f  ofxIniSettings::get(string key, ofVec4f defaultValue) { return has(key) ? ofxToVec4f(keys[key]) : defaultValue; }
 ofRectangle ofxIniSettings::get(string key, ofRectangle defaultValue) { return has(key) ? ofxToRectangle(keys[key]) : defaultValue; }
 ofQuaternion ofxIniSettings::get(string key, ofQuaternion defaultValue) { return has(key) ? ofxToQuaternion(keys[key]) : defaultValue; }
-
+ofMatrix4x4 ofxIniSettings::get(string key, ofMatrix4x4 defaultValue) { return has(key) ? ofxToMatrix4x4(keys[key]) : defaultValue; }
 
 void ofxIniSettings::setString(string newID, string newValue) {
     if (outputFilename=="") ofxExit("ofxIniSettings::setString: outputFilename undefined");
