@@ -34,11 +34,20 @@ public:
     ofQuaternion get(string key, ofQuaternion defaultValue);
     ofMatrix4x4 get(string key, ofMatrix4x4 defaultValue);
     
+    //template<typename T> operator [](const string& x) { return };
+    
+    //template<typename T> T operator[](const string& key) { return get(key,T()); }
+
+    // string operator[](const string& key) { return get(key,string()); }
+
+    
+    //ofTrueTypeFont &operator[](const string& fontnamesize);
+
     //setters
     void setString(string id, string value);
 
-    template <typename T> void set(string id, string key, T value) { set(id=="" ? key : (id+"."+key), value); } //returntype void
-    template <typename T> void set(string key, T value) { setString(key, ofxToString(value)); } //returntype void
+    template<typename T> void set(string id, string key, T value) { set(id=="" ? key : (id+"."+key), value); } //returntype void
+    template<typename T> void set(string key, T value) { setString(key, ofxToString(value)); } //returntype void
 
 };
 
