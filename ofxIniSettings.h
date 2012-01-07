@@ -35,12 +35,8 @@ public:
     ofMatrix4x4 get(string key, ofMatrix4x4 defaultValue);
     
     //template<typename T> operator [](const string& x) { return };
-    
     //template<typename T> T operator[](const string& key) { return get(key,T()); }
-
-    // string operator[](const string& key) { return get(key,string()); }
-
-    
+    // string operator[](const string& key) { return get(key,string()); }    
     //ofTrueTypeFont &operator[](const string& fontnamesize);
 
     //setters
