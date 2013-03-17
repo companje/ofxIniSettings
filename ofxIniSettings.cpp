@@ -5,6 +5,7 @@
 bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile) {
     if (setAsOutputFile) outputFilename = filename;
     filename = ofToDataPath(filename);
+    ofLogNotice() << "ini.loadSettings(\"" << filename << "\"";
     if (filename=="") { ofLog(OF_LOG_ERROR, "ofxIniSettings::no filename"); return false; }
     if (!ofxFileExists(filename)) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
     string cmd,section,key,value,id;
