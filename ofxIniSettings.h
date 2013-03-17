@@ -21,6 +21,8 @@ public:
     map<string,string> keys;
     string outputFilename;
 
+    //template<typename T> T operator[](const string& key) 
+    
     //getters
     int get(string key, int defaultValue);
     bool get(string key, bool defaultValue);
@@ -33,6 +35,25 @@ public:
     ofRectangle get(string key, ofRectangle defaultValue);
     ofQuaternion get(string key, ofQuaternion defaultValue);
     ofMatrix4x4 get(string key, ofMatrix4x4 defaultValue);
+    
+    //WORKS: string operator[](string key) { return get(key,""); }  but not with multiple overloading
+    
+    int getInt(string key) { return get(key,0); }
+    string getString(string key) { return get(key,""); }
+    float getFloat(string key) { return get(key,0.0f); }
+    ofColor getColor(string key) { return ofColor::fromHex(getInt(key)); }
+    bool getBool(string key) { return get(key,false); }
+    
+    //int operator[](string key) { return get(key,0); }    //cannot overload previous one
+    //template<typename T> operator [](const string& x) { return  };
+
+//    int get(string key) { return get(key,0); }
+//    bool get(string key) { return get(key,false); }
+//    float get(string key) { return get(key,0.0f); }
+//    string get(string key) { return get(key,""); }
+//    ofVec2f get(string key) { return get(key,ofVec2f());
+//    ofVec3f get(string key) { return get(key,ofVec3f());
+//    ofVec4f get(string key) { return get(key,ofVec4f());
     
     //template<typename T> operator [](const string& x) { return };
     //template<typename T> T operator[](const string& key) { return get(key,T()); }
