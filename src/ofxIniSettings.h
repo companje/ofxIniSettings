@@ -17,12 +17,13 @@ public:
     bool load(string filename, bool clearFirst=false, bool setAsOutputFile=true); // you can call multiple times with different files, incremental
     bool has(string key) { return keys[key]!=""; };
     void clear();
+    string replaceVariables(string value);
 
     map<string,string> keys;
     string outputFilename;
 
-    //template<typename T> T operator[](const string& key) 
-    
+    //template<typename T> T operator[](const string& key)
+
     //getters
     int get(string key, int defaultValue);
     bool get(string key, bool defaultValue);
@@ -35,15 +36,15 @@ public:
     ofRectangle get(string key, ofRectangle defaultValue);
     ofQuaternion get(string key, ofQuaternion defaultValue);
     ofMatrix4x4 get(string key, ofMatrix4x4 defaultValue);
-    
+
     //WORKS: string operator[](string key) { return get(key,""); }  but not with multiple overloading
-    
+
     int getInt(string key) { return get(key,0); }
     string getString(string key) { return get(key,""); }
     float getFloat(string key) { return get(key,0.0f); }
     ofColor getColor(string key) { return ofColor::fromHex(getInt(key)); }
     bool getBool(string key) { return get(key,false); }
-    
+
     //int operator[](string key) { return get(key,0); }    //cannot overload previous one
     //template<typename T> operator [](const string& x) { return  };
 
@@ -54,10 +55,10 @@ public:
 //    ofVec2f get(string key) { return get(key,ofVec2f());
 //    ofVec3f get(string key) { return get(key,ofVec3f());
 //    ofVec4f get(string key) { return get(key,ofVec4f());
-    
+
     //template<typename T> operator [](const string& x) { return };
     //template<typename T> T operator[](const string& key) { return get(key,T()); }
-    // string operator[](const string& key) { return get(key,string()); }    
+    // string operator[](const string& key) { return get(key,string()); }
     //ofTrueTypeFont &operator[](const string& fontnamesize);
 
     //setters

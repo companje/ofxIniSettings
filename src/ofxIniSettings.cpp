@@ -25,12 +25,26 @@ bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile
                 key = cmd.substr(0, pos);
                 value = cmd.substr(pos+1);
                 id = section!="" ? (section + "." + key) : key;
-                keys[id] = value;
+
+                value = replaceVariables(value);
+
                 //cout << "ini: " << id << " = " << value << endl;
+
+                keys[id] = value;
+
         }
     }
     f.close();
+
     return true;
+}
+
+string ofxIniSettings::replaceVariables(string value) {
+  //this function replaces all $(...) style variables with previously loaded values of the key names
+  for (map<string,string>::iterator it=keys.begin(); it!=keys.end(); it++) {
+      ofStringReplace(value,"$("+it->first+")",it->second);
+  }
+  return value;
 }
 
 void ofxIniSettings::clear() {
