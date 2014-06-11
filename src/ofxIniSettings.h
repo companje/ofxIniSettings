@@ -18,6 +18,7 @@ public:
     bool has(string key) { return keys[key]!=""; };
     void clear();
     string replaceVariables(string value);
+    void print();
 
     map<string,string> keys;
     string outputFilename;
