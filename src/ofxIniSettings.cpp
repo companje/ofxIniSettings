@@ -1,13 +1,11 @@
 #include "ofxIniSettings.h"
 
-#include "ofxExtras.h" //hier ipv in header scheelt compileer tijd wanneer ofxExtras veranderd
-
 bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile) {
     if (setAsOutputFile) outputFilename = filename;
     filename = ofToDataPath(filename);
     ofLogVerbose() << "ini.loadSettings(\"" << filename << "\"";
     if (filename=="") { ofLog(OF_LOG_ERROR, "ofxIniSettings::no filename"); return false; }
-    if (!ofxFileExists(filename)) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
+    if (!ofFile(filename).exists()) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
     string cmd,section,key,value,id;
     ifstream f(filename.c_str(),ios::in);
     if (clearFirst) clear();
@@ -52,22 +50,22 @@ void ofxIniSettings::clear() {
 }
 
 string   ofxIniSettings::get(string key, string   defaultValue) { return has(key) ? keys[key] : defaultValue; }
-int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofxToInteger(keys[key]) : defaultValue; }
+int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofToInt(keys[key]) : defaultValue; }
 float    ofxIniSettings::get(string key, float    defaultValue) { return has(key) ? ofToFloat(keys[key]) : defaultValue; }
-bool     ofxIniSettings::get(string key, bool     defaultValue) { return has(key) ? ofxToBoolean(keys[key]) : defaultValue; }
+bool     ofxIniSettings::get(string key, bool     defaultValue) { return has(key) ? ofToBool(keys[key]) : defaultValue; }
 string   ofxIniSettings::get(string key, const char*    defaultValue) { return has(key) ? keys[key] : defaultValue; }
-ofVec2f  ofxIniSettings::get(string key, ofVec2f defaultValue) { return has(key) ? ofxToVec2f(keys[key]) : defaultValue; }
-ofVec3f  ofxIniSettings::get(string key, ofVec3f defaultValue) { return has(key) ? ofxToVec3f(keys[key]) : defaultValue; }
-ofVec4f  ofxIniSettings::get(string key, ofVec4f defaultValue) { return has(key) ? ofxToVec4f(keys[key]) : defaultValue; }
+ofPoint   ofxIniSettings::get(string key, ofPoint defaultValue) { return has(key) ? ofxToPoint(keys[key]) : defaultValue; }
+//ofVec3f  ofxIniSettings::get(string key, ofVec3f defaultValue) { return has(key) ? ofxToVec3f(keys[key]) : defaultValue; }
+//ofVec4f  ofxIniSettings::get(string key, ofVec4f defaultValue) { return has(key) ? ofxToVec4f(keys[key]) : defaultValue; }
 ofRectangle ofxIniSettings::get(string key, ofRectangle defaultValue) { return has(key) ? ofxToRectangle(keys[key]) : defaultValue; }
 ofQuaternion ofxIniSettings::get(string key, ofQuaternion defaultValue) { return has(key) ? ofxToQuaternion(keys[key]) : defaultValue; }
 ofMatrix4x4 ofxIniSettings::get(string key, ofMatrix4x4 defaultValue) { return has(key) ? ofxToMatrix4x4(keys[key]) : defaultValue; }
 
 void ofxIniSettings::setString(string newID, string newValue) {
-    if (outputFilename=="") ofxExit("ofxIniSettings::setString: outputFilename undefined");
+    if (outputFilename=="") ofLogError("ofxIniSettings::setString","outputFilename undefined");
     bool foundKey = false;
     outputFilename = ofToDataPath(outputFilename);
-    if (!ofxFileExists(outputFilename)) ofxExit("ofxIniSettings::setString: file not found: " + outputFilename);
+    if (!ofFile(outputFilename).exists()) ofLogError("ofxIniSettings::setString","file not found: " + outputFilename);
     string cmd,section,key,value,id;
     ifstream fileInput(outputFilename.c_str(),ios::in);
     vector<string> lines;
