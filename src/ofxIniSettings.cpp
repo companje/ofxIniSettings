@@ -1,46 +1,41 @@
 #include "ofxIniSettings.h"
 
 bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile) {
-    if (setAsOutputFile) outputFilename = filename;
-    filename = ofToDataPath(filename);
-    ofLogVerbose() << "ini.loadSettings(\"" << filename << "\"";
-    if (filename=="") { ofLog(OF_LOG_ERROR, "ofxIniSettings::no filename"); return false; }
-    if (!ofFile(filename).exists()) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
-    string cmd,section,key,value,id;
-    ifstream f(filename.c_str(),ios::in);
-    if (clearFirst) clear();
+  if (setAsOutputFile) outputFilename = filename;
+  filename = ofToDataPath(filename);
+  ofLogVerbose() << "ini.loadSettings(\"" << filename << "\"";
+  if (filename=="") { ofLog(OF_LOG_ERROR, "ofxIniSettings::no filename"); return false; }
+  if (!ofFile(filename).exists()) { ofLog(OF_LOG_ERROR, "file not found: %s",filename.c_str()); return false; }
+  string cmd,section,key,value,id;
+  ifstream f(filename.c_str(),ios::in);
+  if (clearFirst) clear();
 
-    while (getline(f,cmd)) {
-        cmd = ofxTrimStringRight(cmd); //remove \n \r \t space etc
-        switch (cmd[0]) {
-            case 0: break;   //empty first line?
-            case '#': break; //comment
-            case ';': break; //comment
-            case '[': section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
-            default:
-                int pos = cmd.find("=", 0);
-                if (pos==string::npos) break;
-                key = cmd.substr(0, pos);
-                value = cmd.substr(pos+1);
-                id = section!="" ? (section + "." + key) : key;
-
-                value = replaceVariables(value);
-
-                //cout << "ini: " << id << " = " << value << endl;
-
-                keys[id] = value;
-
-        }
+  while (getline(f,cmd)) {
+    cmd = ofTrimBack(cmd); //remove \n \r \t space etc
+    switch (cmd[0]) {
+      case 0: break;   //empty first line?
+      case '#': break; //comment
+      case ';': break; //comment
+      case '[': section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
+      default:
+        int pos = cmd.find("=", 0);
+        if (pos==string::npos) break;
+        key = cmd.substr(0, pos);
+        value = cmd.substr(pos+1);
+        id = section!="" ? (section + "." + key) : key;
+        value = replaceVariables(value);
+        keys[id] = value;
     }
-    f.close();
+  }
+  f.close();
 
-    return true;
+  return true;
 }
 
 string ofxIniSettings::replaceVariables(string value) {
   //this function replaces all $(...) style variables with previously loaded values of the key names
   for (map<string,string>::iterator it=keys.begin(); it!=keys.end(); it++) {
-      ofStringReplace(value,"$("+it->first+")",it->second);
+    ofStringReplace(value,"$("+it->first+")",it->second);
   }
   return value;
 }
@@ -62,40 +57,40 @@ ofQuaternion ofxIniSettings::get(string key, ofQuaternion defaultValue) { return
 ofMatrix4x4 ofxIniSettings::get(string key, ofMatrix4x4 defaultValue) { return has(key) ? ofxToMatrix4x4(keys[key]) : defaultValue; }
 
 void ofxIniSettings::setString(string newID, string newValue) {
-    if (outputFilename=="") ofLogError("ofxIniSettings::setString","outputFilename undefined");
-    bool foundKey = false;
-    outputFilename = ofToDataPath(outputFilename);
-    if (!ofFile(outputFilename).exists()) ofLogError("ofxIniSettings::setString","file not found: " + outputFilename);
-    string cmd,section,key,value,id;
-    ifstream fileInput(outputFilename.c_str(),ios::in);
-    vector<string> lines;
+  if (outputFilename=="") ofLogError("ofxIniSettings::setString","outputFilename undefined");
+  bool foundKey = false;
+  outputFilename = ofToDataPath(outputFilename);
+  if (!ofFile(outputFilename).exists()) ofLogError("ofxIniSettings::setString","file not found: " + outputFilename);
+  string cmd,section,key,value,id;
+  ifstream fileInput(outputFilename.c_str(),ios::in);
+  vector<string> lines;
 
-    while (getline(fileInput,cmd)) {
-        switch (cmd[0]) {
-            case 0: break;   //empty first line?
-            case '#': break; //comment
-            case ';': break; //comment
-            case '[': section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
-            default:
-                int pos = cmd.find("=", 0);
-                if (pos==string::npos) break;
-                key = cmd.substr(0, pos);
-                id = section!="" ? (section + "." + key) : key;
-                if (id==newID) {
-                    foundKey=true;
-                    cmd=key+"="+newValue;  //change the value if found
-                }
+  while (getline(fileInput,cmd)) {
+    switch (cmd[0]) {
+      case 0: break;   //empty first line?
+      case '#': break; //comment
+      case ';': break; //comment
+      case '[': section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
+      default:
+        int pos = cmd.find("=", 0);
+        if (pos==string::npos) break;
+        key = cmd.substr(0, pos);
+        id = section!="" ? (section + "." + key) : key;
+        if (id==newID) {
+          foundKey=true;
+          cmd=key+"="+newValue;  //change the value if found
         }
-        lines.push_back(cmd); //write to output list
     }
-    fileInput.close();
-    if (!foundKey) {
-        lines.insert(lines.begin(), newID + "=" + newValue);
-        ofLogWarning() << "ofxIniSettings: New key '" << newID << "' created in '" << outputFilename << "'";
-    }
-    ofstream fileOutput(outputFilename.c_str(),ios::out);
-    for (int i=0; i<lines.size(); i++) fileOutput << lines[i] << endl;
-    fileOutput.close();
+    lines.push_back(cmd); //write to output list
+  }
+  fileInput.close();
+  if (!foundKey) {
+    lines.insert(lines.begin(), newID + "=" + newValue);
+    ofLogWarning() << "ofxIniSettings: New key '" << newID << "' created in '" << outputFilename << "'";
+  }
+  ofstream fileOutput(outputFilename.c_str(),ios::out);
+  for (int i=0; i<lines.size(); i++) fileOutput << lines[i] << endl;
+  fileOutput.close();
 }
 
 void ofxIniSettings::print() {
