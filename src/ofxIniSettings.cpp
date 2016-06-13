@@ -16,7 +16,7 @@ bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile
       case 0: break;   //empty first line?
       case '#': break; //comment
       case ';': break; //comment
-      case '[': section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
+      case '[': keys["section"] = section = cmd.substr(1,cmd.length()-2); break; //section, remove brackets
       default:
         int pos = cmd.find("=", 0);
         if (pos==string::npos) break;
@@ -28,6 +28,15 @@ bool ofxIniSettings::load(string filename, bool clearFirst, bool setAsOutputFile
     }
   }
   f.close();
+
+  //loop over all keys and replace $(section) with name found in current [section]
+  //for (map<string, string>::iterator it = keys.begin(); it != keys.end(); it++) {
+   // cout << it->first << "=" << it->second << endl;
+   // ofStringReplace(value, "$(section)", it->second);
+  //}
+
+
+  //ofStringReplace(value, "$(section)", section);
 
   return true;
 }
@@ -43,6 +52,14 @@ string ofxIniSettings::replaceVariables(string value) {
 void ofxIniSettings::clear() {
     keys.clear();
 }
+
+//string ofxIniSettings::expandString(string key, string value) {
+//  string section = ofxStringBeforeFirst(key, ".");
+//  cout << "expand string: key=" << key << " value=" << value << ": replace $(section) by " << section << endl;
+//    //section=" << section << " (key=" << key << ")" << " " << value << endl;
+//  ofStringReplace(value, "$(section)", section);
+//  return value;
+//}
 
 string   ofxIniSettings::get(string key, string   defaultValue) { return has(key) ? keys[key] : defaultValue; }
 int      ofxIniSettings::get(string key, int      defaultValue) { return has(key) ? ofToInt(keys[key]) : defaultValue; }

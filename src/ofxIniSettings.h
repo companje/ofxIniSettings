@@ -16,6 +16,8 @@ public:
   map<string,string> keys;
   string outputFilename;
 
+  string expandString(string key, string value); //this replaces $(section) by the section name
+
   //getters
   int get(string key, int defaultValue);
   bool get(string key, bool defaultValue);
@@ -78,4 +80,9 @@ private:
     if (v.size()!=4) return ofVec4f(0,0,0,0);
     else return ofVec4f(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]),ofToFloat(v[3]));
   }
+
+  /*string ofxStringBeforeFirst(string str, string key) {
+    size_t endpos = str.find(key);
+    return (string::npos != endpos) ? str.substr(0, endpos) : str;
+  }*/
 };
