@@ -52,8 +52,9 @@ private:
 
   ofPoint ofxToPoint(string str) {
     vector <string> v = ofSplitString(str,",");
-    if (v.size()==3) return ofPoint(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2]));
-    else if (v.size()==2) return ofPoint(ofToFloat(v[0]),ofToFloat(v[1]));
+    if (v.size()==3) return ofPoint(ofToFloat(v[0]),ofToFloat(v[1]),ofToFloat(v[2])); //3D
+    else if (v.size()==2) return ofPoint(ofToFloat(v[0]),ofToFloat(v[1])); //2D
+    else if (v.size()==1) return ofPoint(ofToFloat(v[0]),ofToFloat(v[0])); //1D
     else return ofPoint();
   }
 
